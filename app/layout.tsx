@@ -9,9 +9,9 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-    title: 'SkyBox',
+    title: 'StoreIt',
     description:
-        'SkyBox: Your secure cloud for easy file storage and sharing, accessible anytime, anywhere.',
+        'StoreIt-Your secure cloud for easy file storage and sharing, accessible anytime, anywhere.',
 }
 
 export default function RootLayout({
