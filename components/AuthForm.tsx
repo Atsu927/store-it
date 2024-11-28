@@ -16,24 +16,31 @@ import {
 import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 import Link from 'next/link'
+import { createAccount } from '@/lib/actions/user.actions'
 
+// Define the type for the form, either 'sign-in' or 'sign-up'
 type FormType = 'sign-in' | 'sign-up'
 
+// Function to create the schema for form validation based on the form type
 const authFormSchema = (formType: FormType) => {
     return z.object({
-        email: z.string().email(),
+        email: z.string().email(), // Email field must be a valid email
         fullName:
             formType === 'sign-up'
-                ? z.string().min(2).max(50)
-                : z.string().optional(),
+                ? z.string().min(2).max(50) // Full name is required for sign-up and must be between 2 and 50 characters
+                : z.string().optional(), // Full name is optional for sign-in
     })
 }
 
+// AuthForm component that takes a 'type' prop to determine if it's a sign-in or sign-up form
 const AuthForm = ({ type }: { type: FormType }) => {
-    const [isLoading, setIsLoading] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
+    const [isLoading, setIsLoading] = useState(false) // State to manage loading state
+    const [errorMessage, setErrorMessage] = useState('') // State to manage error messages
+    const [accountId, setAccountId] = useState(null)
 
+    // Create the form schema based on the form type
     const formSchema = authFormSchema(type)
+    // Initialize the form with react-hook-form and zod resolver
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -42,8 +49,23 @@ const AuthForm = ({ type }: { type: FormType }) => {
         },
     })
 
+    // Function to handle form submission
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+        setIsLoading(true) // Set loading state to true
+        setErrorMessage('') // Clear any existing error messages
+
+        try {
+            const user = await createAccount({
+                fullName: values.fullName || '',
+                email: values.email,
+            })
+
+            setAccountId(user.accountId)
+        } catch {
+            setErrorMessage('Failed to create account, please try again.') // Set error message if account creation fails
+        } finally {
+            setIsLoading(false) // Set loading state to false
+        }
     }
 
     return (
@@ -117,9 +139,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                         )}
                     </Button>
                     {errorMessage && (
-                        <p className="error-message">
-                            *{errorMessage} required
-                        </p>
+                        <p className="error-message">{errorMessage}</p>
                     )}
                     <div className="body-2 flex justify-center">
                         <p className="text-light-100">
