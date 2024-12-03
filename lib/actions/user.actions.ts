@@ -90,3 +90,4 @@ export const verifySecret = async ({
         handleError(error, 'Failed to verify OTP')
     }
 }
+
