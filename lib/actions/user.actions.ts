@@ -1,10 +1,11 @@
 'use server'
 
-import { createAdminClient } from '@/lib/appwrite'
+import { createAdminClient, createSessionClient } from '@/lib/appwrite'
 import { appwriteConfig } from '@/lib/appwrite/config'
 import { Query, ID } from 'node-appwrite'
 import { parseStringify } from '@/lib/utils'
 import { cookies } from 'next/headers'
+import { avatarPlaceholdeUrl } from '@/constants'
 
 const getUserByEmail = async (email: string) => {
     const { databases } = await createAdminClient()
@@ -57,7 +58,7 @@ export const createAccount = async ({
             {
                 fullName,
                 email,
-                avatar: 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png',
+                avatar: avatarPlaceholdeUrl,
                 accountId,
             }
         )
@@ -91,3 +92,18 @@ export const verifySecret = async ({
     }
 }
 
+export const getCurrentUser = async () => {
+    const { databases, account } = await createSessionClient()
+
+    const result = await account.get()
+
+    const user = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.usersCollectionId,
+        [Query.equal('accountId', result.$id)]
+    )
+
+    if (user.total <= 0) return null
+
+    return parseStringify(user.documents[0])
+}
