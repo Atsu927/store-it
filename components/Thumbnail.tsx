@@ -10,7 +10,7 @@ interface Props {
     className?: string
 }
 
-const Thumnail = ({
+export const Thumbnail = ({
     type,
     extension,
     url = '',
@@ -36,4 +36,4 @@ const Thumnail = ({
     )
 }
 
-export default Thumnail
+export default Thumbnail
