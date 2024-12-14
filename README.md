@@ -18,7 +18,6 @@ Store-It is a simple and efficient storage management system designed to help yo
 - Appwrite
 - ShadCN
 
-
 ## Quick Start
 
 Follow these steps to set up the project locally on your machine.
