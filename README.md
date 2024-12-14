@@ -13,10 +13,11 @@ Store-It is a simple and efficient storage management system designed to help yo
 
 - React 19
 - Next.js 15
-- Appwrite
 - TailwindCSS
-- ShadCN
 - TypeScript
+- Appwrite
+- ShadCN
+
 
 ## Quick Start
 
